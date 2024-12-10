@@ -1,0 +1,9 @@
+{
+  "name": "lib-tabToSelect",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/components/tabToSelect/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project lib-tabToSelect --web",
+  "targets": {}
+}

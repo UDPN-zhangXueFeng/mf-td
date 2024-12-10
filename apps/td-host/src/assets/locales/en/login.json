@@ -1,0 +1,27 @@
+{
+  "title": "Building next-generation token-based core banking systems",
+  "systemName": "Tokenized Deposit/Stablecoin Management System",
+  "form": {
+    "username": "USERNAME",
+    "password": "PASSWORD",
+    "captcha": "CAPTCHA",
+    "signIn": "Sign In →",
+    "or": "or",
+    "connectMetamask": "Connect with MetaMask",
+    "metamaskHint": "Before signing in with MetaMask, please enter your username."
+  },
+  "validation": {
+    "username": {
+      "required": "Please input your username!",
+      "minLength": "Username must be at least 3 characters!"
+    },
+    "password": {
+      "required": "Please input your password!",
+      "minLength": "Password must be at least 6 characters!"
+    },
+    "captcha": {
+      "required": "Please input the captcha!",
+      "length": "Captcha must be 4 characters!"
+    }
+  }
+} 

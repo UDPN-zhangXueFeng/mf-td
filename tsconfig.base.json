@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mf-td/lib-ant-config": ["libs/uis/ant-conf/src/index.ts"],
+      "@mf-td/lib-axios": ["libs/https/axios/src/index.ts"],
+      "@mf-td/lib-empty": ["libs/components/empty/src/index.ts"],
+      "@mf-td/lib-layout": ["libs/components/layout/src/index.ts"],
+      "@mf-td/lib-tabToSelect": ["libs/components/tabToSelect/src/index.ts"],
+      "@mf-td/themes": ["libs/uis/themes/src/index.ts"],
+      "dashboard/Module": ["apps/rt-dashboard/src/remote-entry.ts"],
+      "todolist/Module": ["apps/rt-todolist/src/remote-entry.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

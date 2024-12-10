@@ -1,0 +1,14 @@
+{
+    "i18n-ally.localesPaths": [
+      "./apps/ida-portal/src/locales",
+      "./apps/ida/src/locales"
+    ],
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "i18n-ally.keystyle": "nested",
+    "commentTranslate.targetLanguage": "en",
+    "commentTranslate.multiLineMerge": true
+  }
+  

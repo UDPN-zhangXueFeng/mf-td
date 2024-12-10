@@ -1,0 +1,9 @@
+{
+  "name": "lib-axios",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/https/axios/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project lib-axios --web",
+  "targets": {}
+}

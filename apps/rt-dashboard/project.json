@@ -1,0 +1,71 @@
+{
+  "name": "dashboard",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/rt-dashboard/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/apps/rt-dashboard",
+        "index": "apps/rt-dashboard/src/index.html",
+        "main": "apps/rt-dashboard/src/main.ts",
+        "tsConfig": "apps/rt-dashboard/tsconfig.app.json",
+        "rspackConfig": "apps/rt-dashboard/rspack.config.ts",
+        "assets": [
+          "apps/rt-dashboard/src/favicon.ico",
+          "apps/rt-dashboard/src/assets",{
+            "input": "libs/components/empty/src/lib/assets",
+            "glob": "**/*",
+            "output": "assets/empty"
+          }
+        ]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "apps/rt-dashboard/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "dashboard:build:development",
+        "port": 4201
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "dashboard:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "dashboard:serve",
+        "port": 4208,
+        "staticFilePath": "dist/apps/rt-dashboard"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "dashboard:serve:development"
+        },
+        "production": {
+          "serveTarget": "dashboard:serve:production"
+        }
+      }
+    }
+  }
+}

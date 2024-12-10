@@ -1,0 +1,65 @@
+{
+  "name": "todolist",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/rt-todolist/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/apps/rt-todolist",
+        "index": "apps/rt-todolist/src/index.html",
+        "main": "apps/rt-todolist/src/main.ts",
+        "tsConfig": "apps/rt-todolist/tsconfig.app.json",
+        "rspackConfig": "apps/rt-todolist/rspack.config.ts",
+        "assets": [
+          "apps/rt-todolist/src/favicon.ico",
+          "apps/rt-todolist/src/assets"
+        ]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "apps/rt-todolist/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "todolist:build:development",
+        "port": 4204
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "todolist:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "todolist:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "todolist:serve:development"
+        },
+        "production": {
+          "serveTarget": "todolist:serve:production"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "td-host",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/td-host/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/apps/td-host",
+        "index": "apps/td-host/src/index.html",
+        "main": "apps/td-host/src/main.ts",
+        "tsConfig": "apps/td-host/tsconfig.app.json",
+        "rspackConfig": "apps/td-host/rspack.config.ts",
+        "assets": ["apps/td-host/src/favicon.ico", "apps/td-host/src/assets",{
+          "input": "libs/components/layout/src/lib/assets/menu",
+          "glob": "**/*",
+          "output": "assets/menu"
+        },{
+          "input": "libs/components/empty/src/lib/assets",
+          "glob": "**/*",
+          "output": "assets/empty"
+        }]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "apps/td-host/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "td-host:build:development",
+        "port": 4200,
+        "proxy": {
+          "/api": {
+            "target": "http://10.0.7.110:1000",
+            "changeOrigin": true,
+            "pathRewrite": { "^/api": "" }
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "td-host:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "td-host:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "td-host:serve:development"
+        },
+        "production": {
+          "serveTarget": "td-host:serve:production"
+        }
+      }
+    }
+  }
+}

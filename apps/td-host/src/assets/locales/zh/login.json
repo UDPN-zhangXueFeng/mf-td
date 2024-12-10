@@ -1,0 +1,27 @@
+{
+  "title": "构建下一代代币化核心银行系统",
+  "systemName": "代币化存款/稳定币管理系统",
+  "form": {
+    "username": "用户名",
+    "password": "密码",
+    "captcha": "验证码",
+    "signIn": "登录 →",
+    "or": "或",
+    "connectMetamask": "使用 MetaMask 连接",
+    "metamaskHint": "使用 MetaMask 登录前，请输入您的用户名"
+  },
+  "validation": {
+    "username": {
+      "required": "请输入用户名！",
+      "minLength": "用户名至少需要3个字符！"
+    },
+    "password": {
+      "required": "请输入密码！",
+      "minLength": "密码至少需要6个字符！"
+    },
+    "captcha": {
+      "required": "请输入验证码！",
+      "length": "验证码必须是4个字符！"
+    }
+  }
+} 

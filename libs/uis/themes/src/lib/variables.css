@@ -1,0 +1,38 @@
+:root {
+  --color-primary: #5c59e8 !important; /* violet-600 */
+  --color-primary-light: #ddd6fe; /* violet-200 */
+  --color-primary-light-2: #f3f1fa; /* menu hover color */
+  --color-primary-dark: #7c3aed; /* violet-700 */
+  --color-primary-text: #183673; /* login page title  main page title */
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-light);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* 保持原有的其他样式 */
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within {
+  box-shadow: 0 0 0 2px var(--color-primary) !important;
+}
+
+.ant-btn-color-primary {
+  box-shadow: none !important;
+}
