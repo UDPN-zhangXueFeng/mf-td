@@ -1,9 +1,10 @@
-import { Input, Button, Image, Form } from 'antd';
+import { Input, Button, Image, Form, message } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LibAxios, RenderProps } from '@mf-td/lib-axios';
 import { useState } from 'react';
+import { getEncryptionData } from '@mf-td/tools';
 
 interface LoginForm {
   username: string;
@@ -20,13 +21,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [loginForm] = Form.useForm<LoginForm>();
   const [metamaskForm] = Form.useForm<MetamaskForm>();
+  const [loginLoading, setLoginLoading] = useState(false);
   const [randomstr, setRandomstr] = useState<string>('');
-
-  const handleLogin = async (values: LoginForm) => {
-    console.log('Login form values:', values);
-    // 处理登录逻辑
-    navigate('/main');
-  };
 
   const handleMetamaskLogin = async (values: MetamaskForm) => {
     console.log('Metamask login values:', values);
@@ -64,84 +60,134 @@ export default function LoginPage() {
           <h2 className="text-2xl lg:text-3xl text-[var(--color-primary)] font-semibold text-center mb-12">
             {t('systemName')}
           </h2>
+          <LibAxios
+            url="/api/rbac/v1/login"
+            method="POST"
+            immediate={false}
+            loading={loginLoading}
+            onSuccess={(data) => {
+              // 处理登录成功逻辑
+              console.log('Login success:', data);
+              // // 可以在这里存储 token
+              // TODO: 也许要整个localstorage
+              localStorage.setItem('token', data.token);
+              // // 跳转到主页
+              navigate('/main');
+            }}
+            onError={(error) => {
+              // 处理登录失败逻辑
+              console.error('Login failed:', error);
+              // 可以使用 antd 的 message 组件显示错误
+              message.error(error.message || t('login.failed'));
+            }}
+          >
+            {({ refetch }: RenderProps) => (
+              <Form
+                form={loginForm}
+                onFinish={(values: LoginForm) => {
+                  // 在这里构造加密后的请求数据
+                  const encryptedData = {
+                    loginName: getEncryptionData(values.username),
+                    password: getEncryptionData(values.password),
+                    code: getEncryptionData(values.captcha)
+                  };
 
-          <Form form={loginForm} onFinish={handleLogin} layout="vertical">
-            <Form.Item
-              label={t('form.username')}
-              name="username"
-              required
-              rules={[
-                { required: true, message: t('validation.username.required') },
-                { min: 3, message: t('validation.username.minLength') }
-              ]}
-            >
-              <Input size="large" />
-            </Form.Item>
-
-            <Form.Item
-              label={t('form.password')}
-              name="password"
-              required
-              rules={[
-                { required: true, message: t('validation.password.required') },
-                { min: 6, message: t('validation.password.minLength') }
-              ]}
-            >
-              <Input.Password
-                size="large"
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={t('form.captcha')}
-              name="captcha"
-              required
-              rules={[
-                { required: true, message: t('validation.captcha.required') },
-                { len: 4, message: t('validation.captcha.length') }
-              ]}
-            >
-              <div className="flex gap-4">
-                <Input size="large" className="flex-1" />
-                <LibAxios
-                  url="/api/rbac/v1/code/getCode"
-                  method="get"
-                  responseType="blob"
-                  onSuccess={(data, response) => {
-                    setRandomstr(response?.headers.randomstr);
-                  }}
-                >
-                  {({ data, refetch }: RenderProps) => (
-                    <div className="w-36 h-10">
-                      {data && (
-                        <img
-                          src={URL.createObjectURL(data)}
-                          alt="CAPTCHA"
-                          className="w-full h-full object-contain cursor-pointer"
-                          onClick={refetch}
-                        />
-                      )}
-                    </div>
-                  )}
-                </LibAxios>
-              </div>
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                size="large"
-                htmlType="submit"
-                className="w-full mt-5 h-12 bg-[var(--color-primary)] hover:!bg-[var(--color-primary-dark)] bg-primary"
+                  setLoginLoading(true);
+                  refetch({
+                    data: encryptedData,
+                    headers: {
+                      randomstr: randomstr,
+                      rData: true
+                    }
+                  }); // 触发登录请求
+                }}
+                layout="vertical"
               >
-                {t('form.signIn')}
-              </Button>
-            </Form.Item>
-          </Form>
+                <Form.Item
+                  label={t('form.username')}
+                  name="username"
+                  required
+                  rules={[
+                    {
+                      required: true,
+                      message: t('validation.username.required')
+                    },
+                    { min: 3, message: t('validation.username.minLength') }
+                  ]}
+                >
+                  <Input size="large" />
+                </Form.Item>
 
+                <Form.Item
+                  label={t('form.password')}
+                  name="password"
+                  required
+                  rules={[
+                    {
+                      required: true,
+                      message: t('validation.password.required')
+                    },
+                    { min: 6, message: t('validation.password.minLength') }
+                  ]}
+                >
+                  <Input.Password
+                    size="large"
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label={t('form.captcha')}
+                  name="captcha"
+                  required
+                  rules={[
+                    {
+                      required: true,
+                      message: t('validation.captcha.required')
+                    }
+                  ]}
+                >
+                  <div className="flex gap-4">
+                    <Input size="large" className="flex-1" />
+                    <LibAxios
+                      url="/api/rbac/v1/code/getCode"
+                      method="get"
+                      responseType="blob"
+                      onSuccess={(data, response) => {
+                        setRandomstr(response?.headers.randomstr);
+                      }}
+                    >
+                      {({ data, refetch }: RenderProps) => (
+                        <div className="w-36 h-10">
+                          {data && (
+                            <img
+                              src={URL.createObjectURL(data)}
+                              alt="CAPTCHA"
+                              className="w-full h-full object-contain cursor-pointer"
+                              onClick={() => refetch()}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </LibAxios>
+                  </div>
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    size="large"
+                    htmlType="submit"
+                    className="w-full mt-5 h-12 bg-[var(--color-primary)] hover:!bg-[var(--color-primary-dark)] bg-primary"
+                  >
+                    {t('form.signIn')}
+                  </Button>
+                </Form.Item>
+              </Form>
+            )}
+          </LibAxios>
           <div className="text-center text-gray-500 my-6">{t('form.or')}</div>
 
           <Form

@@ -1,10 +1,38 @@
 import React, { useEffect, useState, ReactNode } from 'react';
+import { message } from 'antd';
+import i18next from 'i18next'; // 假设你使用 i18next 做国际化
 import axios, {
   AxiosRequestConfig,
   Method,
   AxiosError,
   AxiosResponse
 } from 'axios';
+
+// 创建一个消息队列来防止重复显示
+let messageQueue: string[] = [];
+const MESSAGE_DURATION = 3; // 消息显示时间（秒）
+
+// 添加消息去重函数
+const showUniqueMessage = (
+  type: 'success' | 'error' | 'warning',
+  content: string
+) => {
+  // 如果消息已经在队列中，则不显示
+  if (messageQueue.includes(content)) {
+    return;
+  }
+
+  // 添加消息到队列
+  messageQueue.push(content);
+
+  // 显示消息
+  message[type](content, MESSAGE_DURATION);
+
+  // 在消息消失后从队列中移除
+  setTimeout(() => {
+    messageQueue = messageQueue.filter((msg) => msg !== content);
+  }, MESSAGE_DURATION * 1000);
+};
 
 // 创建 Axios 实例
 const axiosInstance = axios.create({
@@ -14,13 +42,27 @@ const axiosInstance = axios.create({
   }
 });
 
+// 定义不需要 token 的白名单路径
+const whiteList = ['/api/rbac/v1/login', '/api/rbac/v1/code/getCode'];
+
 // 添加请求拦截器
 axiosInstance.interceptors.request.use(
   (config) => {
+    // 如果请求路径在白名单中，直接返回配置
+    if (whiteList.includes(config.url || '')) {
+      return config;
+    }
+
+    // 获取 token
+    const token = localStorage.getItem('token');
+
+    // 为其他请求添加 token
+    if (token) {
+      config.headers.set('token', token);
+    }
     return config;
   },
   (error) => {
-    // 对请求错误做些什么
     return Promise.reject(error);
   }
 );
@@ -28,11 +70,28 @@ axiosInstance.interceptors.request.use(
 // 添加响应拦截器
 axiosInstance.interceptors.response.use(
   (response) => {
-    // 对响应数据做点什么
+    console.log('response', response);
+    // 如果属性存在且为true，则返回response，用户自己处理数据
+    if (
+      response.config.headers?.rData &&
+      response.config.headers?.rData === true
+    ) {
+      return response;
+    }
+    // 提示错误信息
+    if (response.data.code === 1) {
+      showUniqueMessage(
+        'error',
+        i18next.t(response.data.message) || response.data.message
+      );
+      return response.data;
+    }
+    if (response.data.code === 0) {
+      return response.data;
+    }
     return response;
   },
   (error: AxiosError) => {
-    // 对响应错误做点什么
     if (error.response) {
       switch (error.response.status) {
         case 401:
@@ -68,7 +127,7 @@ interface HttpProps {
     | 'stream';
   immediate?: boolean;
   loading?: boolean;
-  onSuccess?: (data: any, response?: AxiosResponse) => void; // 修改这里
+  onSuccess?: (data: any, response?: AxiosResponse) => void;
   onError?: (error: any) => void;
   children?: ReactNode | ((props: RenderProps) => ReactNode);
   loadingRender?: ReactNode | (() => ReactNode);
@@ -79,7 +138,7 @@ export interface RenderProps {
   data: any;
   loading: boolean;
   error: any;
-  refetch: () => void;
+  refetch: (customConfig?: Partial<AxiosRequestConfig>) => Promise<void>;
 }
 
 export function LibAxios({
@@ -101,7 +160,7 @@ export function LibAxios({
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchData = async () => {
+  const fetchData = async (customConfig?: Partial<AxiosRequestConfig>) => {
     try {
       setLoading(true);
       setError(null);
@@ -112,7 +171,8 @@ export function LibAxios({
         params,
         data,
         headers,
-        responseType
+        responseType,
+        ...customConfig // 合并自定义配置
       };
 
       const result = await axiosInstance(config);
@@ -138,7 +198,7 @@ export function LibAxios({
         ? loadingRender()
         : loadingRender;
     }
-    return <div className="loading">Loading...</div>;
+    return null;
   };
 
   const renderError = () => {
@@ -147,11 +207,7 @@ export function LibAxios({
         ? errorRender(error)
         : errorRender;
     }
-    return (
-      <div className="error">
-        Error: {error.message || 'Something went wrong'}
-      </div>
-    );
+    return null;
   };
 
   const renderContent = () => {
@@ -163,15 +219,15 @@ export function LibAxios({
         refetch: fetchData
       });
     }
-    return children || <pre>{JSON.stringify(response, null, 2)}</pre>;
+    return children;
   };
 
   return (
-    <div>
+    <>
       {(loading || externalLoading) && renderLoading()}
       {error && renderError()}
-      {!loading && !error && response && renderContent()}
-    </div>
+      {renderContent()}
+    </>
   );
 }
 

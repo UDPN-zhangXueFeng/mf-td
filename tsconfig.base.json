@@ -22,6 +22,7 @@
       "@mf-td/lib-layout": ["libs/components/layout/src/index.ts"],
       "@mf-td/lib-tabToSelect": ["libs/components/tabToSelect/src/index.ts"],
       "@mf-td/themes": ["libs/uis/themes/src/index.ts"],
+      "@mf-td/tools": ["libs/tools/index.ts"],
       "dashboard/Module": ["apps/rt-dashboard/src/remote-entry.ts"],
       "todolist/Module": ["apps/rt-todolist/src/remote-entry.ts"]
     }
