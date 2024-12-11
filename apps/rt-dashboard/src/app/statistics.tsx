@@ -7,7 +7,7 @@ export type Main1Props = {
   activeKey: number;
   coinData: any[];
 };
-export function Main(props: Main1Props) {
+export function Statistics(props: Main1Props) {
   const { t } = useTranslation('statistic-analysis');
   const { activeKey, coinData } = props;
   useEffect(() => {
@@ -82,7 +82,7 @@ export function Main(props: Main1Props) {
         unit: ''
       }
     ];
-  }, [t,stablecoinGet]);
+  }, [t, stablecoinGet]);
   return (
     <div className="w-full flex justify-between mb-6">
       <div className=" bg-white shadow-lg rounded-xl p-4 !w-full">
@@ -140,4 +140,4 @@ export function Main(props: Main1Props) {
   );
 }
 
-export default Main;
+export default Statistics;

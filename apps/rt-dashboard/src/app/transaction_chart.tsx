@@ -3,6 +3,7 @@ import { Image, Dropdown, MenuProps, Space } from 'antd';
 import { useMemo, useState } from 'react';
 import { CaretDownOutlined, InteractionOutlined } from '@ant-design/icons';
 import { LibAxios, RenderProps } from '@mf-td/lib-axios';
+import { getDateFormat }from "../utils/getDateFormat"
 import * as echarts from 'echarts';
 export type MainProps = {
   activeKey: number;
@@ -49,7 +50,6 @@ export function TransactionCharts(props: Readonly<MainProps>) {
             endTime: String(nowTmsp)
           }}
           onSuccess={(data) => {
-            console.log(data, 'data');
             const myChart = echarts.init(
               document.getElementById('main2') as HTMLElement
             );
@@ -60,9 +60,7 @@ export function TransactionCharts(props: Readonly<MainProps>) {
                 formatter: function (params: any[]) {
                   let result = '';
                   params.forEach((param) => {
-                    result += `${param.seriesName}:${(param.data)} ${
-                      coinData[activeKey]['label']
-                    }<br/>`;
+                    result += `${param.seriesName}:${param.data} ${coinData[activeKey]['label']}<br/>`;
                   });
                   return result;
                 }
@@ -84,9 +82,11 @@ export function TransactionCharts(props: Readonly<MainProps>) {
               xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: data.map((item: any) => {
-                  return item.statisticsDay
-                })
+                data:
+                  data &&
+                  data.map((item: any) => {
+                    return getDateFormat(item.statisticsDay);
+                  })
               },
               yAxis: {
                 type: 'value'
@@ -95,17 +95,17 @@ export function TransactionCharts(props: Readonly<MainProps>) {
                 {
                   name: t('statistic_analysis_0018'),
                   type: 'line',
-                  data: data.map((item: any) => item.topUpTotal)
+                  data: data && data.map((item: any) => item.topUpTotal)
                 },
                 {
                   name: t('statistic_analysis_0019'),
                   type: 'line',
-                  data: data.map((item: any) => item.transferTotal)
+                  data: data && data.map((item: any) => item.transferTotal)
                 },
                 {
                   name: t('statistic_analysis_0020'),
                   type: 'line',
-                  data: data.map((item: any) => item.withdrawalTotal)
+                  data: data && data.map((item: any) => item.withdrawalTotal)
                 }
               ]
             });

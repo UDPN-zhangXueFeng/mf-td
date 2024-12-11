@@ -3,6 +3,7 @@ import { Image, Dropdown, MenuProps, Space } from 'antd';
 import { useMemo, useState } from 'react';
 import { CaretDownOutlined, InteractionOutlined } from '@ant-design/icons';
 import { LibAxios, RenderProps } from '@mf-td/lib-axios';
+import { getDateFormat }from "../utils/getDateFormat"
 import * as echarts from 'echarts';
 export type MainProps = {
   activeKey: number;
@@ -37,7 +38,7 @@ export function WalletCharts(props: Readonly<MainProps>) {
   ];
   const items: MenuProps['items'] = activeDateList;
   const showText = useMemo(() => {
-   if (props.coinData.length > 0) {
+    if (props.coinData.length > 0) {
       return (
         <LibAxios
           key={activeKey}
@@ -58,16 +59,21 @@ export function WalletCharts(props: Readonly<MainProps>) {
                 trigger: 'axis'
               },
               legend: {
-                data: [t('statistic_analysis_0013'), t('statistic_analysis_0017')]
+                data: [
+                  t('statistic_analysis_0013'),
+                  t('statistic_analysis_0017')
+                ]
               },
 
               calculable: true,
               xAxis: [
                 {
                   type: 'category',
-                  data: data.map((item: any) => {
-                    return 'awawd';
-                  })
+                  data:
+                    data &&
+                    data.map((item: any) => {
+                     return getDateFormat(item.statisticsDay);
+                    })
                 }
               ],
               yAxis: [
@@ -79,12 +85,12 @@ export function WalletCharts(props: Readonly<MainProps>) {
                 {
                   name: t('statistic_analysis_0016'),
                   type: 'bar',
-                  data: data.map((item: any) => item.walletNumber)
+                  data: data && data.map((item: any) => item.walletNumber)
                 },
                 {
                   name: t('statistic_analysis_0017'),
                   type: 'bar',
-                  data: data.map((item: any) => item.walletNewNumber)
+                  data: data && data.map((item: any) => item.walletNewNumber)
                 }
               ]
             });
@@ -160,9 +166,7 @@ export function WalletCharts(props: Readonly<MainProps>) {
       );
     }
   }, [activeKey, coinData]);
-  return (
-    <div>{showText}</div>
-  );
+  return <div>{showText}</div>;
 }
 
 export default WalletCharts;

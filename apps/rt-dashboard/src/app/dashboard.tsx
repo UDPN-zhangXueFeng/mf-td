@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Header from './header';
-import Main from './main';
+import Statistics from './statistics';
 import WalletCharts from './wallet_chart';
 import TransactionCharts from './transaction_chart';
 export function Dashboard() {
@@ -16,7 +16,7 @@ export function Dashboard() {
           setActiveKey(key)
         }}
       />
-    <Main activeKey={activeKey} coinData={coinData}/>
+    <Statistics activeKey={activeKey} coinData={coinData}/>
     <WalletCharts activeKey={activeKey} coinData={coinData}/>
     <TransactionCharts activeKey={activeKey} coinData={coinData}/>
     </div>
