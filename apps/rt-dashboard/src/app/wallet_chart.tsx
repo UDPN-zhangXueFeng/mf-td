@@ -8,7 +8,7 @@ export type MainProps = {
   activeKey: number;
   coinData: any[];
 };
-export function Charts(props: Readonly<MainProps>) {
+export function WalletCharts(props: Readonly<MainProps>) {
   const { t } = useTranslation('statistic-analysis');
   const { activeKey, coinData } = props;
   const [nowTmsp, setNowTmsp] = useState<number>(
@@ -49,8 +49,6 @@ export function Charts(props: Readonly<MainProps>) {
             endTime: String(nowTmsp)
           }}
           onSuccess={(data) => {
-            console.log(data,"data");
-
             const myChart = echarts.init(
               document.getElementById('main1') as HTMLElement
             );
@@ -167,4 +165,4 @@ export function Charts(props: Readonly<MainProps>) {
   );
 }
 
-export default Charts;
+export default WalletCharts;

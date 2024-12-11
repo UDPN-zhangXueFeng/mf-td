@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Image } from 'antd';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { InteractionOutlined } from '@ant-design/icons';
 import { LibAxios, RenderProps } from '@mf-td/lib-axios';
 export type Main1Props = {
@@ -10,6 +10,11 @@ export type Main1Props = {
 export function Main(props: Main1Props) {
   const { t } = useTranslation('statistic-analysis');
   const { activeKey, coinData } = props;
+  useEffect(() => {
+    if (props.coinData.length > 0) {
+      setStablecoinGet(props.coinData[activeKey]);
+    }
+  }, [props.activeKey, props.coinData]);
   const [stablecoinGet, setStablecoinGet] = useState<any>({});
   const stablecoinInfo = useMemo(() => {
     const {
@@ -77,7 +82,7 @@ export function Main(props: Main1Props) {
         unit: ''
       }
     ];
-  }, [stablecoinGet]);
+  }, [t,stablecoinGet]);
   return (
     <div className="w-full flex justify-between mb-6">
       <div className=" bg-white shadow-lg rounded-xl p-4 !w-full">
@@ -89,7 +94,7 @@ export function Main(props: Main1Props) {
             url="/api/manage/v1/statistics/getStableCoin"
             method="POST"
             onSuccess={(data, response) => {
-              console.log(data, 'data');
+              console.log(data, 'data1231');
             }}
           >
             {({ data, refetch }: RenderProps) => {

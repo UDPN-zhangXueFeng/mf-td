@@ -1,14 +1,13 @@
 import { Dropdown, Image, Select } from 'antd';
 import { LibAxios, RenderProps } from '@mf-td/lib-axios';
 import { useState } from 'react';
-export type CustomTabsProps = {
+export type HearderProps = {
   onClick: (key:number,info?:any) => void;
 };
-let current = 0;
-export const CustomTab = (props: CustomTabsProps) => {
+export const Hearder = (props: HearderProps) => {
   const [activeKey, setActiveKey] = useState(0);
   const [selectType, setSelectType] = useState(1);
-  const [activeInfo,setActiveInfo] = useState({});
+  const [coinData,setCoinData] = useState();
   return (
     <div className="flex items-center mb-6 w-full">
         <LibAxios
@@ -16,6 +15,7 @@ export const CustomTab = (props: CustomTabsProps) => {
           method="get"
           onSuccess={(data, response) => {
             props.onClick(0, data)
+            setCoinData(data)
           }}
         >
           {({ data, refetch }: RenderProps) => {
@@ -27,9 +27,8 @@ export const CustomTab = (props: CustomTabsProps) => {
                       return (
                         <div
                           onClick={() => {
-                            current = index;
                             setActiveKey(() => index);
-                            props.onClick(index);
+                            props.onClick(index,coinData);
                           }}
                           key={el.code}
                           className={`px-4 cursor-pointer py-2 rounded-md flex items-center ml-1 ${
@@ -75,9 +74,8 @@ export const CustomTab = (props: CustomTabsProps) => {
                   };
                 })}
                 onChange={(value:any) => {
-                  current = Number(value);
                   setActiveKey(() => Number(value));
-                  props.onClick(Number(value));
+                  props.onClick(Number(value),coinData);
                 }}
               />)
             }
@@ -92,20 +90,18 @@ export const CustomTab = (props: CustomTabsProps) => {
                 key: '1',
                 label: 'Tabs',
                 onClick: () => {
-                  current = 0;
                   setActiveKey(0);
                   setSelectType(1);
-                  props.onClick(0);
+                  props.onClick(0,coinData);
                 }
               },
               {
                 key: '2',
                 label: 'Dropdown Lists',
                 onClick: () => {
-                  current = 0;
                   setActiveKey(0);
                   setSelectType(2);
-                  props.onClick(0);
+                  props.onClick(0,coinData);
                 }
               }
             ]
@@ -124,3 +120,4 @@ export const CustomTab = (props: CustomTabsProps) => {
       </div>
   );
 };
+export default Hearder;
