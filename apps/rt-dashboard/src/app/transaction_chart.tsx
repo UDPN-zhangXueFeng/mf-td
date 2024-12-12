@@ -180,7 +180,7 @@ export function TransactionCharts(props: Readonly<MainProps>) {
         </LibAxios>
       );
     }
-  }, [activeKey, coinData]);
+  }, [activeKey, coinData,selectDateText]);
   return <div>{showText}</div>;
 }
 

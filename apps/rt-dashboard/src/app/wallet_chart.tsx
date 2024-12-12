@@ -145,7 +145,6 @@ export function WalletCharts(props: Readonly<MainProps>) {
                             </Space>
                           </a>
                         </Dropdown>
-
                         <CaretDownOutlined className="text-fontTheme" />
                       </div>
                     </div>
@@ -165,7 +164,7 @@ export function WalletCharts(props: Readonly<MainProps>) {
         </LibAxios>
       );
     }
-  }, [activeKey, coinData]);
+  }, [activeKey, coinData,selectDateText]);
   return <div>{showText}</div>;
 }
 
