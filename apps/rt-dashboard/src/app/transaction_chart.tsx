@@ -113,7 +113,7 @@ export function TransactionCharts(props: Readonly<MainProps>) {
         >
           {({ data, refetch }: RenderProps) => {
             return (
-              <div className="bg-white shadow-lg my-6">
+              <div className="bg-white shadow-lg my-6 rounded-xl">
                 <div className="w-full flex justify-between">
                   <div className="bg-white shadow-lg rounded-xl p-4 w-full">
                     <div className="w-full flex justify-between">

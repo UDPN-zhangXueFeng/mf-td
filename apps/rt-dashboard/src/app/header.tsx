@@ -5,8 +5,11 @@ export type HearderProps = {
   onClick: (key: number, info?: any) => void;
 };
 export const Hearder = (props: HearderProps) => {
+  // 当前选中的币种索引
   const [activeKey, setActiveKey] = useState(0);
+  // 当前币种的选择方式
   const [selectType, setSelectType] = useState(1);
+  // 币种列表
   const [coinData, setCoinData] = useState();
   return (
     <div className="flex items-center mb-6 w-full">
@@ -14,7 +17,9 @@ export const Hearder = (props: HearderProps) => {
         url="/api/manage/v1/common/stablecoin/enabled/searches"
         method="get"
         onSuccess={(data, response) => {
+          // 将当前币种索引和币种列表回传给父组件
           props.onClick(0, data);
+          // 保存币种列表后续使用
           setCoinData(data);
         }}
       >
@@ -79,6 +84,7 @@ export const Hearder = (props: HearderProps) => {
                 }
                 onChange={(value: any) => {
                   setActiveKey(() => Number(value));
+                  // 将当前币种索引和币种列表回传给父组件
                   props.onClick(Number(value), coinData);
                 }}
               />
