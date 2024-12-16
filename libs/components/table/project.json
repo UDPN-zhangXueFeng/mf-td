@@ -1,0 +1,9 @@
+{
+  "name": "lib-table",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/components/table/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project lib-table --web",
+  "targets": {}
+}
