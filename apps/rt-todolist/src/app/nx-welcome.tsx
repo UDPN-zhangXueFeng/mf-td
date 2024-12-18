@@ -4,9 +4,12 @@ import {
   CustomTableTitle
 } from '@mf-td/lib-table';
 import { Form } from 'antd';
+
 import { useTranslation } from 'react-i18next';
-export function NxWelcome({ title }: { title: string }) {
+import { useNavigate } from 'react-router-dom';
+export function NxWelcome() {
   const { t } = useTranslation('statistic-analysis');
+    const navigate = useNavigate();
   const [form] = Form.useForm();
   const customTable = useCustomTable<any>({
     title: t('PUB_Query'),
@@ -115,11 +118,7 @@ export function NxWelcome({ title }: { title: string }) {
               limit: 'e425450b09de42cc9f8c126c2be178c9',
               label: t('Router_0004_1'),
               onClick: () => {
-                console.log('1111');
-
-                // routerPush({
-                //   pathname: '/sp-access/edit'
-                // });
+                navigate('/main/todoList/edit');
               }
             }
           ]}
@@ -133,13 +132,6 @@ export function NxWelcome({ title }: { title: string }) {
             label: t('Router_0004_3'),
             disabled: !(data.state === 1 || data.state === 2)
           },
-
-          // {
-          //   key: 'Examine',
-          //   limit: '020a4ff605714872bb273e3c7e487579',
-          //   label: t('Router_0004_2'),
-          //   disabled: !(data.state === 1),
-          // },
           {
             key: 'View',
             limit: '761e2d985b8a4f95a0df8dc3009fa0f1',
@@ -152,7 +144,6 @@ export function NxWelcome({ title }: { title: string }) {
         switch (key) {
           case 'Edit':
             console.log('www');
-
             break;
         }
       }

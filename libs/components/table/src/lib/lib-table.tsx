@@ -28,6 +28,7 @@ import {
   useState
 } from 'react';
 import useSWR from 'swr';
+import { getLists } from './utils/api';
 // import { TailwindUIMenu } from './tailwindui';
 // import { useHook } from './useHook';
 // import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
@@ -73,6 +74,7 @@ const Custom_Table: (
   // const { t, routerPush, router } = useHook();
   const { t } = useTranslation('login');
   const [thisform] = Form.useForm();
+  const [tableData,setTableData] = useState<any>({})
   const [param, setParam] = useState<any>({
     page: {
       pageSize: 10,
@@ -80,6 +82,10 @@ const Custom_Table: (
     },
     data: form.initialValues || {}
   });
+  const getList = async (url: string) => {
+    const res = await getLists(url, param);
+    setTableData(res.data)
+  };
   useEffect(() => {
     setParam({
       page: {
@@ -90,20 +96,21 @@ const Custom_Table: (
     });
   }, [form]);
 
-  const { data: tableData, isLoading, mutate } = useSWR([url, param]);
+  // const { data: tableData, isLoading, mutate } = useSWR([url, param]);
 
   useEffect(() => {
-    mutate();
-    console.log(tableData,"tableData");
+    // mutate();
+    // console.log(url, 'url');
+    // console.log(param, 'param');
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getList(url)
   }, [param]);
 
-  useImperativeHandle(ref, () => ({
-    mutate: () => {
-      mutate();
-    }
-  }));
+  // useImperativeHandle(ref, () => ({
+  //   mutate: () => {
+  //     mutate();
+  //   }
+  // }));
 
   const [userPermission, setUserPermission] = useState<string[]>([]);
   useEffect(() => {
@@ -115,8 +122,8 @@ const Custom_Table: (
       setParam({
         ...param,
         page: {
-          pageSize: pagination.pageSize || 10,
-          pageNum: pagination.current || 1
+          pageSize: pagination.pageSize ?? 10,
+          pageNum: pagination.current ?? 1
         }
       });
     },
@@ -124,7 +131,6 @@ const Custom_Table: (
   );
 
   const onFinish = useCallback(() => {
-    console.log(222);
     const values = (form.form ?? thisform).getFieldsValue();
     const _values: any = {};
     Object.keys(values).forEach((item) => {
@@ -373,6 +379,7 @@ const Custom_Table: (
                               <div>
                                 {actionArr.length > 1 ? (
                                   <>wad</>
+                                ) : (
                                   // <TailwindUIMenu
                                   //   title={
                                   //    <>awadw</>
@@ -383,7 +390,6 @@ const Custom_Table: (
                                   //   }}
                                   //   callback={mutate}
                                   // />
-                                ) : (
                                   <>
                                     {actionArr.map((el: any) => {
                                       return (
@@ -414,7 +420,7 @@ const Custom_Table: (
                   ] as ColumnsType<any>)
                 : ([] as ColumnsType<any>))
             ]}
-            loading={isLoading}
+            // loading={isLoading}
             dataSource={tableData?.rows}
             pagination={
               table.pagination === false

@@ -141,6 +141,9 @@ export interface RenderProps {
   refetch: (customConfig?: Partial<AxiosRequestConfig>) => Promise<void>;
 }
 
+export const request = (url: string, option: AxiosRequestConfig) => {
+  return axiosInstance(url, { ...option });
+};
 export function LibAxios({
   url,
   method = 'GET',
