@@ -6,3 +6,6 @@
 body {
   margin: 0;
 }
+.ant-table-container{
+  margin: 0 1rem;
+}

@@ -1,12 +1,8 @@
 import '../styles.css';
-import { LibAntConfig } from '@mf-td/lib-ant-config';
-import { RouterProvider } from 'react-router-dom';
-import { router } from '../router';
+import NxWelcome from './nx-welcome';
 export function App() {
   return (
-    <LibAntConfig>
-      <RouterProvider router={router} />
-    </LibAntConfig>
+    <NxWelcome/>
   );
 }
 

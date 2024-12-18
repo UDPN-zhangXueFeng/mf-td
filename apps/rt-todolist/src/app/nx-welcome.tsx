@@ -8,7 +8,7 @@ import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 export function NxWelcome() {
-  const { t } = useTranslation('statistic-analysis');
+  const { t } = useTranslation('financial');
     const navigate = useNavigate();
   const [form] = Form.useForm();
   const customTable = useCustomTable<any>({
