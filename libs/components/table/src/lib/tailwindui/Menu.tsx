@@ -27,10 +27,10 @@ import {
   DocumentTextIcon,
 } from '@heroicons/react/20/solid';
 import { Modal, message } from 'antd';
-import type { MenuItemType } from 'antd/lib/menu/hooks/useItems';
-import { Fragment } from 'react';
-import { useHook } from '../useHook';
-
+import { MenuItemType } from 'antd/es/menu/interface';
+import { Fragment, PropsWithChildren } from 'react';
+// import { useHook } from '../useHook';
+import { useTranslation } from 'react-i18next';
 const { confirm } = Modal;
 export const getIcon = (key: string) => {
   const iconStyle = {
@@ -127,7 +127,7 @@ export function TailwindUIMenu({
   onClick,
   callback,
 }: PropsWithChildren<{
-  title: ReactNode;
+  title: any;
   items: (MenuItemType & {
     confimDesc?: string;
     confimStr?: string;
@@ -144,7 +144,7 @@ export function TailwindUIMenu({
   }>;
   callback: () => void;
 }>) {
-  const { t } = useHook();
+  const { t } = useTranslation('login');
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -176,13 +176,13 @@ export function TailwindUIMenu({
               : 'right-0'
           } z-10 mt-2 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
         >
-          {items.map((item) => {
+          {items.map((item:any) => {
             return (
               <Menu.Item
                 as="div"
                 className="py-1 cursor-pointer"
                 key={item.key}
-                onClick={(event) => {
+                onClick={(event:any) => {
                   event.preventDefault();
                 }}
               >
@@ -216,7 +216,7 @@ export function TailwindUIMenu({
                             return new Promise((resolve, reject) => {
                               const prom = onClick(item);
                               prom &&
-                                prom.then((res) => {
+                                prom.then((res:any) => {
                                   if (res.data.code === 0) {
                                     message.success({
                                       content: t('PUB_Success').replace(

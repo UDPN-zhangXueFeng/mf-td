@@ -29,12 +29,13 @@ import {
 } from 'react';
 import useSWR from 'swr';
 import { getLists } from './utils/api';
-// import { TailwindUIMenu } from './tailwindui';
+import { TailwindUIMenu } from './tailwindui';
 // import { useHook } from './useHook';
 // import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { getTimestamp } from './utils/getDateFormat';
 import { useTranslation } from 'react-i18next';
 import { MenuItemType } from 'antd/es/menu/interface';
+import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 type ItemsProps = FormItemProps & {
   type: 'Input' | 'RangePicker';
 };
@@ -378,18 +379,20 @@ const Custom_Table: (
                             {actionArr.length ? (
                               <div>
                                 {actionArr.length > 1 ? (
-                                  <>wad</>
+                                    <TailwindUIMenu
+                                    title={
+                                      <EllipsisHorizontalIcon
+                                          className={'w-6 h-6 ' + classNames}
+                                        />
+                                    }
+                                    items={actionArr}
+                                    onClick={(e: any) => {
+                                      return table.actionClick(_data, e.key);
+                                    }}
+                                    callback={() =>getList(url)}
+                                  />
                                 ) : (
-                                  // <TailwindUIMenu
-                                  //   title={
-                                  //    <>awadw</>
-                                  //   }
-                                  //   items={actionArr}
-                                  //   onClick={(e: any) => {
-                                  //     return table.actionClick(_data, e.key);
-                                  //   }}
-                                  //   callback={mutate}
-                                  // />
+
                                   <>
                                     {actionArr.map((el: any) => {
                                       return (
@@ -466,13 +469,13 @@ export const CustomTableTitle = (props: {
               if (
                 process.env.NEXT_PUBLIC_SYS_ENV === 'TDManage'
                   ? userPermission?.indexOf(butt?.limit + '') >= 0 ||
-                    butt?.limit == 'OS_P_show'
+                    butt?.limit === 'OS_P_show'
                   : true
               ) {
                 return (
                   <Button
                     key={butt.key}
-                    type={butt.type || 'primary'}
+                    type={butt.type ?? 'primary'}
                     className="text-xs mx-2"
                     onClick={butt.onClick}
                     disabled={butt.disabled}

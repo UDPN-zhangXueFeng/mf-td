@@ -11,6 +11,7 @@ export const MainRoute: RouteObject = {
       element: <Navigate to="dashboard" />
     },
     DashboardRoute,
-    TodoListRoute
+    TodoListRoute,
+
   ]
 };
